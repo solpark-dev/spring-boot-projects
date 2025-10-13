@@ -57,7 +57,8 @@ public class RestHttpClientApp {
 		HttpClient httpClient = new DefaultHttpClient();
 		
 		// Request URL Make
-		String url= 	"http://127.0.0.1:8080/Spring13/app/userAPI/getUser?name=홍길동&age=10";
+		//String url= 	"http://127.0.0.1:8080/Spring13/app/userAPI/getUser?name=홍길동&age=10";
+		String url= 	"http://127.0.0.1:8080/userAPI/getUser?name=홍길동&age=10";
 
 		// HttpGet : Http Protocol  GET 방식 Request Header 구성
 		HttpGet httpGet = new HttpGet(url);

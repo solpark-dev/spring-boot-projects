@@ -15,8 +15,8 @@ import spring.service.user.UserDao;
  * FileName : UserDaoImpl14.java  ( Data Access Object ) 
  * ㅇ 데이터베이스와 직접적인 통신을 담당하는 퍼시스턴스 계층을 담당할 UserDao 인터페이스 구현 
 */ 
-@Repository("userDao")
-public class UserDaoImpl implements UserDao{
+//@Repository("userDao")
+public class UserDaoImpl_NOUSE implements UserDao{
 
 	///Field
 	@Autowired
@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao{
 	}
 
 	///Constructor
-	public UserDaoImpl() {
+	public UserDaoImpl_NOUSE() {
 		System.out.println("::"+getClass()+" default Constructor Call.....");
 	}
 	
