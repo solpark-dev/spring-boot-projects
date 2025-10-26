@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ========================================
+         Spring Boot Parent POM 상속
+         - 버전 관리 자동화
+         - 기본 설정 제공
+    ========================================= -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+        <relativePath/>
+    </parent>
+
+    <!-- ========================================
+         프로젝트 정보
+    ========================================= -->
+    <groupId>com.model2.mvc</groupId>
+    <artifactId>shopping-mall-springboot</artifactId>
+    <version>1.0.0</version>
+    <packaging>war</packaging>
+    
+    <name>shopping-mall-springboot</name>
+    <description>Spring Boot Shopping Mall Application</description>
+
+    <!-- ========================================
+         Java 버전 설정
+    ========================================= -->
+    <properties>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- ========================================
+         의존성 (Dependencies)
+    ========================================= -->
+    <dependencies>
+        <!-- 1. Spring Boot Web Starter
+             - Spring MVC
+             - 내장 Tomcat
+             - Jackson (JSON)
+             - Validation
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 2. Spring Boot AOP Starter
+             - AspectJ
+             - 로깅용 AOP 지원
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- 3. MyBatis Spring Boot Starter
+             - MyBatis
+             - MyBatis-Spring
+             - 자동 설정 지원
+        -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <!-- 4. Oracle JDBC Driver
+             - Oracle 데이터베이스 연결
+        -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- 5. Apache Commons DBCP2
+             - 커넥션 풀 (선택사항, HikariCP가 기본)
+        -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+
+        <!-- 6. JSP 지원 -->
+        <!-- 6-1. Tomcat Embed Jasper (JSP 엔진) -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 6-2. JSTL (JSP 표준 태그 라이브러리) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <!-- 7. 파일 업로드 지원
+             - Apache Commons FileUpload
+        -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+        </dependency>
+
+        <!-- 8. HTTP 클라이언트 (소셜 로그인 API 호출용) -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
+        <!-- 9. JSON 처리 (소셜 로그인 응답 파싱용) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+        <!-- 10. Lombok (선택사항 - 코드 간소화)
+             - Getter/Setter 자동 생성
+             - 생략 가능
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 11. Spring Boot DevTools (개발 편의성)
+             - 자동 재시작
+             - LiveReload
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 12. Spring Boot Test Starter (테스트용) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- ========================================
+         빌드 설정
+    ========================================= -->
+    <build>
+        <!-- 최종 생성 파일명 -->
+        <finalName>shopping-mall</finalName>
+        
+        <plugins>
+            <!-- Spring Boot Maven Plugin
+                 - 실행 가능한 JAR/WAR 생성
+                 - mvn spring-boot:run 지원
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Compiler Plugin
+                 - Java 11 컴파일 설정
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Maven WAR Plugin
+                 - WAR 패키징 설정
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

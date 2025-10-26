@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PurchaseMapper">
+ 	
+	<resultMap id="purchaseSelectMap" type="purchase">
+		<result property="tranNo" 			column="order_no" 			jdbcType="INTEGER"/>
+		<result property="addressId" 		column="address_id" 		jdbcType="INTEGER"/>
+		<result property="totalPrice" 		column="total_price" 		jdbcType="INTEGER"/>
+		<result property="tranCode" 		column="order_status_code" 	jdbcType="VARCHAR"/>
+		<result property="orderDate" 		column="order_date" 		jdbcType="DATE"/>
+		
+		<result property="receiverName" 	column="receiver_name" 		jdbcType="VARCHAR"/>
+		<result property="receiverPhone" 	column="phone_number" 		jdbcType="VARCHAR"/>
+		<result property="dlvyAddr" 		column="address" 			jdbcType="VARCHAR"/>
+		
+		<result property="paymentOption" 	column="payment_method" 	jdbcType="VARCHAR"/>
+		
+		<association property="purchaseProd" javaType="product">
+			<id property="prodNo" 			column="prod_no" 			jdbcType="INTEGER"/>
+			<result property="prodName" 	column="prod_name" 			jdbcType="VARCHAR"/>
+			<result property="prodDetail" 	column="prod_detail" 		jdbcType="VARCHAR"/>
+			<result property="manuDate" 	column="manufacture_day" 	jdbcType="VARCHAR"/>
+			<result property="price" 		column="price_per_item" 	jdbcType="INTEGER"/>
+			<result property="regDate"		column="prod_reg_date" 		jdbcType="DATE"/>
+		</association>
+		
+		<association property="buyer" javaType="user">
+			<id property="userNo"       column="user_no"         jdbcType="INTEGER"/>
+			<result property="userId" 	column="user_id" 		 jdbcType="VARCHAR"/>
+			<result property="userName" column="user_name" 		 jdbcType="VARCHAR"/>
+			<result property="password" column="password" 		 jdbcType="VARCHAR"/>
+			<result property="role" 	column="role" 			 jdbcType="VARCHAR"/>
+			<result property="status"   column="status"          jdbcType="VARCHAR"/>
+			<result property="email" 	column="email" 			 jdbcType="VARCHAR"/>
+			<result property="regDate" 	column="user_reg_date" 	 jdbcType="DATE"/>
+		</association>
+	</resultMap>
+	
+	<insert id="addAddress" parameterType="purchase">
+		<selectKey keyProperty="addressId" resultType="int" order="BEFORE">
+			SELECT seq_addresses_id.nextval FROM dual
+		</selectKey>
+		INSERT INTO user_addresses (
+			address_id,
+			user_no,
+			address_alias,
+			receiver_name,
+			address,
+			phone_number,
+			is_default
+		) VALUES (
+			#{addressId},
+			#{buyer.userNo},
+			'ìƒˆ ë°°ì†¡ì§€',
+			#{receiverName},
+			#{dlvyAddr},
+			#{receiverPhone},
+			'N'
+		)
+	</insert>
+
+	<insert id="addPurchase" parameterType="purchase">
+	    <selectKey keyProperty="tranNo" resultType="int" order="BEFORE">
+	        SELECT seq_orders_order_no.nextval FROM dual
+	    </selectKey>
+	    INSERT INTO new_orders( 
+	        order_no, 
+	        buyer_user_no, 
+	        address_id, 
+	        total_price, 
+	        order_status_code, 
+	        order_date
+	    ) 
+	    VALUES ( 
+	        #{tranNo}, 
+	        #{buyer.userNo}, 
+	        #{addressId}, 
+	        #{totalPrice}, 
+	        #{tranCode}, 
+	        SYSDATE
+	    )
+	</insert>
+	
+	<insert id="addOrderDetail" parameterType="map">
+	    INSERT INTO new_order_details(
+	        order_detail_id,
+	        order_no,
+	        prod_no,
+	        quantity,
+	        price_per_item
+	    )
+	    VALUES (
+	        seq_order_details_id.nextval,
+	        #{orderNo},
+	        #{prodNo},
+	        #{quantity},
+	        #{pricePerItem}
+	    )
+	</insert>
+	
+	<insert id="addPayment" parameterType="map">
+	    INSERT INTO new_payments(
+	        payment_id,
+	        order_no,
+	        payment_method,
+	        amount,
+	        status,
+	        paid_at
+	    )
+	    VALUES (
+	        'PAY_' || #{orderNo} || '_' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+	        #{orderNo},
+	        #{paymentMethod},
+	        #{amount},
+	        'COMPLETED',
+	        SYSDATE
+	    )
+	</insert>
+	 
+	<select id="getPurchase" parameterType="int" resultMap="purchaseSelectMap">
+		SELECT
+		    o.order_no, o.buyer_user_no, o.address_id, o.total_price, o.order_status_code, o.order_date,
+		    addr.receiver_name, addr.phone_number, addr.address,
+		    pay.payment_method,
+		    od.prod_no, od.quantity, od.price_per_item,
+		    p.prod_name, p.prod_detail, p.manufacture_day, p.reg_date as prod_reg_date,
+		    u.user_no, u.user_id, u.user_name, u.password, u.role, u.status, u.email, u.reg_date as user_reg_date
+		FROM new_orders o
+		JOIN new_users u ON o.buyer_user_no = u.user_no
+		JOIN user_addresses addr ON o.address_id = addr.address_id
+		LEFT JOIN new_payments pay ON o.order_no = pay.order_no
+		LEFT JOIN new_order_details od ON o.order_no = od.order_no
+		LEFT JOIN new_product p ON od.prod_no = p.prod_no
+		WHERE o.order_no = #{value}
+		AND ROWNUM = 1
+	</select>
+	 
+	<update id="updatePurchase" parameterType="purchase">
+	   	UPDATE user_addresses
+		SET
+			receiver_name = #{receiverName}, 
+			phone_number = #{receiverPhone},
+			address = #{dlvyAddr}
+		WHERE address_id = #{addressId}
+	</update>
+	 
+	<update id="updateTranCode" parameterType="purchase">
+	 	UPDATE new_orders
+	 	SET order_status_code = #{tranCode}
+	 	WHERE order_no = #{tranNo}
+	</update>
+	 
+	<select id="getPurchaseList" parameterType="map" resultMap="purchaseSelectMap">
+	    SELECT *
+	    FROM (	
+	    	SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (	
+				SELECT
+				    o.order_no, o.buyer_user_no, o.address_id, o.total_price, o.order_status_code, o.order_date,
+				    addr.receiver_name, addr.phone_number, addr.address,
+				    pay.payment_method,
+				    od.prod_no, od.quantity, od.price_per_item,
+				    p.prod_name, p.prod_detail, p.manufacture_day, p.reg_date as prod_reg_date,
+				    u.user_no, u.user_id, u.user_name, u.password, u.role, u.status, u.email, u.reg_date as user_reg_date
+				FROM new_orders o
+				JOIN new_users u ON o.buyer_user_no = u.user_no
+				JOIN user_addresses addr ON o.address_id = addr.address_id
+				LEFT JOIN new_payments pay ON o.order_no = pay.order_no
+				LEFT JOIN new_order_details od ON o.order_no = od.order_no
+				LEFT JOIN new_product p ON od.prod_no = p.prod_no
+				WHERE u.user_no = (SELECT user_no FROM new_users WHERE user_id = #{buyerId})
+				<if test="searchCondition != null">
+					<if test="searchCondition == 0 and searchKeyword != null and searchKeyword != ''">
+						AND o.order_no = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1 and searchKeyword != null and searchKeyword != ''">
+						AND UPPER(u.user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+					</if>
+					<if test="searchCondition == 2 and searchKeyword != null and searchKeyword != ''">
+						AND o.order_status_code = #{searchKeyword}
+					</if>
+				</if>
+				ORDER BY o.order_no DESC
+			) inner_table
+			WHERE ROWNUM &lt;= #{search.endRowNum}
+		) outer_table
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	</select>
+	
+	<select id="getTotalCount" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM new_orders o
+		JOIN new_users u ON o.buyer_user_no = u.user_no
+		WHERE u.user_id = #{buyerId}
+	</select>
+	
+	<select id="getPurchaseByProdNo" parameterType="int" resultMap="purchaseSelectMap">
+	    SELECT
+		    o.order_no, o.buyer_user_no, o.address_id, o.total_price, o.order_status_code, o.order_date,
+		    addr.receiver_name, addr.phone_number, addr.address,
+		    pay.payment_method,
+		    od.prod_no, od.quantity, od.price_per_item,
+		    p.prod_name, p.prod_detail, p.manufacture_day, p.reg_date as prod_reg_date,
+		    u.user_no, u.user_id, u.user_name, u.password, u.role, u.status, u.email, u.reg_date as user_reg_date
+		FROM new_orders o
+		JOIN new_users u ON o.buyer_user_no = u.user_no
+		JOIN user_addresses addr ON o.address_id = addr.address_id
+		LEFT JOIN new_payments pay ON o.order_no = pay.order_no
+		LEFT JOIN new_order_details od ON o.order_no = od.order_no
+		LEFT JOIN new_product p ON od.prod_no = p.prod_no
+		WHERE od.prod_no = #{value}
+		AND ROWNUM = 1
+	</select>
+
+</mapper>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ProductMapper">
+
+    <resultMap id="productFileMap" type="productFile">
+        <id     property="fileId"       column="file_id"        jdbcType="INTEGER"/>
+        <result property="prodNo"       column="prod_no"        jdbcType="INTEGER"/>
+        <result property="originalName" column="original_name"  jdbcType="VARCHAR"/>
+        <result property="savedName"    column="saved_name"     jdbcType="VARCHAR"/>
+        <result property="fileSize"     column="file_size"      jdbcType="INTEGER"/>
+        <result property="fileType"     column="file_type"      jdbcType="VARCHAR"/>
+        <result property="uploadDate"   column="upload_date"    jdbcType="DATE"/>
+    </resultMap>
+    
+    <!-- ========================================
+         ResultMap: Product + ProductFile ë§¤í•‘
+         ======================================== -->
+    <resultMap id="productSelectMap" type="product">
+        <result property="prodNo" column="prod_no" jdbcType="INTEGER"/>
+        <result property="prodName" column="prod_name" jdbcType="VARCHAR"/>
+        <result property="prodDetail" column="prod_detail" jdbcType="VARCHAR"/>
+        <result property="manuDate" column="manufacture_day" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="INTEGER"/>
+        <result property="regDate" column="reg_date" jdbcType="DATE"/>
+        <result property="saleStatus" column="sale_status" jdbcType="VARCHAR"/>
+        <result property="stock" column="stock" jdbcType="INTEGER"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+        
+        <!-- âœ… ì¹´í…Œê³ ë¦¬ ì •ë³´ ì¶”ê°€ -->
+        <association property="category" javaType="category">
+            <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+            <result property="categoryName" column="category_name" jdbcType="VARCHAR"/>
+        </association>
+        
+        <collection property="productFiles" ofType="productFile">
+            <id property="fileId" column="file_id" jdbcType="INTEGER"/>
+            <result property="prodNo" column="prod_no" jdbcType="INTEGER"/>
+            <result property="originalName" column="original_name" jdbcType="VARCHAR"/>
+            <result property="savedName" column="saved_name" jdbcType="VARCHAR"/>
+            <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
+            <result property="fileType" column="file_type" jdbcType="VARCHAR"/>
+            <result property="uploadDate" column="upload_date" jdbcType="DATE"/>
+        </collection>
+    </resultMap>
+
+    <!-- ========================================
+         SELECT: ìµœì‹  ìƒí’ˆ ì¡°íšŒ (ë©”ì¸ íŽ˜ì´ì§€ìš©)
+         âœ… ìˆ˜ì •: ì¹´í…Œê³ ë¦¬ ì •ë³´ í¬í•¨
+         ======================================== -->
+    <select id="getTopProducts" parameterType="int" resultMap="productSelectMap">
+        SELECT
+            p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, 
+            p.price, p.reg_date, p.stock, p.category_id,
+            c.category_name,
+            f.file_id, f.original_name, f.saved_name, f.file_size, f.file_type, f.upload_date
+        FROM (
+            SELECT *
+            FROM (
+                SELECT prod_no, prod_name, prod_detail, manufacture_day, 
+                       price, reg_date, stock, category_id
+                FROM new_product
+                ORDER BY prod_no DESC
+            )
+            WHERE ROWNUM <![CDATA[<=]]> #{value}
+        ) p
+        LEFT JOIN new_categories c ON p.category_id = c.category_id
+        LEFT JOIN product_files f ON p.prod_no = f.prod_no
+        ORDER BY p.prod_no DESC, f.file_id ASC
+    </select>
+
+    <!-- ========================================
+         SELECT ONE: ìƒí’ˆ ìƒì„¸ ì¡°íšŒ (ì¹´í…Œê³ ë¦¬ í¬í•¨)
+         ======================================== -->
+    <select id="getProduct" parameterType="int" resultMap="productSelectMap">
+        SELECT
+            p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, 
+            p.price, p.reg_date, p.stock, p.category_id,
+            c.category_name,
+            f.file_id, f.original_name, f.saved_name, f.file_size, f.file_type, f.upload_date
+        FROM new_product p
+        LEFT JOIN new_categories c ON p.category_id = c.category_id
+        LEFT JOIN product_files f ON p.prod_no = f.prod_no
+        WHERE p.prod_no = #{value}
+        ORDER BY f.file_id ASC
+    </select>
+
+    <!-- ========================================
+         SELECT ONE: ìƒí’ˆ ìƒì„¸ ì¡°íšŒ (íŒë§¤ ìƒíƒœ í¬í•¨)
+         âœ… ìˆ˜ì •: ì¹´í…Œê³ ë¦¬ ì •ë³´ í¬í•¨
+         NEW_ORDER_DETAILS ê¸°ë°˜ìœ¼ë¡œ ìˆ˜ì •
+         ======================================== -->
+    <select id="getProductWithStatus" parameterType="int" resultMap="productSelectMap">
+        SELECT
+            p.prod_no, 
+            p.prod_name, 
+            p.prod_detail, 
+            p.manufacture_day, 
+            p.price, 
+            p.reg_date,
+            p.stock,
+            p.category_id,
+            c.category_name,
+            CASE
+                WHEN od.order_detail_id IS NOT NULL THEN 'SOLD'
+                ELSE 'AVAILABLE'
+            END as sale_status,
+            f.file_id, 
+            f.original_name, 
+            f.saved_name, 
+            f.file_size, 
+            f.file_type, 
+            f.upload_date
+        FROM new_product p
+        LEFT JOIN new_categories c ON p.category_id = c.category_id
+        LEFT JOIN product_files f ON p.prod_no = f.prod_no
+        LEFT JOIN new_order_details od ON p.prod_no = od.prod_no
+        WHERE p.prod_no = #{value}
+        ORDER BY f.file_id ASC
+    </select>
+
+    <!-- ========================================
+         INSERT: ìƒí’ˆ ë“±ë¡
+         ======================================== -->
+    <insert id="addProduct" parameterType="product">
+        <selectKey keyProperty="prodNo" resultType="int" order="BEFORE">
+            SELECT seq_product_prod_no.nextval FROM dual
+        </selectKey>
+        INSERT INTO new_product(
+            prod_no, category_id, prod_name, prod_detail, 
+            manufacture_day, price, stock, reg_date
+        )
+        VALUES (
+            #{prodNo}, #{categoryId}, #{prodName}, #{prodDetail}, 
+            #{manuDate}, #{price}, #{stock}, SYSDATE
+        )
+    </insert>
+    
+    <!-- ========================================
+         INSERT: ìƒí’ˆ íŒŒì¼ ë“±ë¡
+         ======================================== -->
+    <insert id="addProductFile" parameterType="productFile">
+        INSERT INTO product_files(file_id, prod_no, original_name, saved_name, file_size, file_type, upload_date)
+        VALUES (seq_product_files_id.nextval, #{prodNo}, #{originalName}, #{savedName}, #{fileSize}, #{fileType}, SYSDATE)
+    </insert>
+
+    <!-- ========================================
+         UPDATE: ìƒí’ˆ ì •ë³´ ìˆ˜ì •
+         ======================================== -->
+    <update id="updateProduct" parameterType="product">
+        UPDATE new_product
+        <set>
+            <if test="categoryId != null and categoryId > 0">
+                category_id = #{categoryId},
+            </if>
+            prod_name = #{prodName},
+            prod_detail = #{prodDetail},
+            manufacture_day = #{manuDate},
+            price = #{price},
+            <if test="stock != null and stock >= 0">
+                stock = #{stock}
+            </if>
+        </set>
+        WHERE prod_no = #{prodNo}
+    </update>
+
+    <!-- ========================================
+         SELECT LIST: ìƒí’ˆ ëª©ë¡ ì¡°íšŒ (íŒë§¤ ìƒíƒœ í¬í•¨)
+         âœ… ìˆ˜ì •: ì¹´í…Œê³ ë¦¬ ì •ë³´ í¬í•¨
+         ======================================== -->
+    <select id="getProductListWithStatus" parameterType="search" resultMap="productSelectMap">
+        SELECT
+            p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, 
+            p.price, p.reg_date, p.stock, p.category_id,
+            c.category_name,
+            final.sale_status,
+            f.file_id, f.original_name, f.saved_name, f.file_size, f.file_type, f.upload_date
+        FROM (
+            SELECT
+                prod_no, sale_status, stock,
+                ROW_NUMBER() OVER (
+                    <choose>
+                        <when test="sortBy == 'lowPrice'">ORDER BY price ASC, prod_no DESC</when>
+                        <when test="sortBy == 'highPrice'">ORDER BY price DESC, prod_no DESC</when>
+                        <when test="sortBy == 'oldest'">ORDER BY prod_no ASC</when>
+                        <otherwise>ORDER BY prod_no DESC</otherwise>
+                    </choose>
+                ) AS rn
+            FROM (
+                SELECT
+                    p.prod_no,
+                    p.price,
+                    p.stock,
+                    CASE WHEN MAX(od.order_detail_id) IS NOT NULL THEN 'SOLD' ELSE 'AVAILABLE' END as sale_status
+                FROM new_product p
+                LEFT JOIN new_order_details od ON p.prod_no = od.prod_no
+                <where>
+                    <if test="searchCondition != null and searchKeyword != null and searchKeyword != ''">
+                        <choose>
+                            <when test="searchCondition == '0'">AND CAST(p.prod_no AS VARCHAR2(20)) LIKE '%'||#{searchKeyword}||'%'</when>
+                            <when test="searchCondition == '1'">AND UPPER(p.prod_name) LIKE UPPER('%'||#{searchKeyword}||'%')</when>
+                            <when test="searchCondition == '2'">AND CAST(p.price AS VARCHAR2(20)) LIKE '%'||#{searchKeyword}||'%'</when>
+                        </choose>
+                    </if>
+                    
+                    <if test="priceRange != null and priceRange != ''">
+                        <choose>
+                            <when test="priceRange == '0-50000'">AND p.price &lt;= 50000</when>
+                            <when test="priceRange == '50000-100000'">AND p.price BETWEEN 50000 AND 100000</when>
+                            <when test="priceRange == '100000-200000'">AND p.price BETWEEN 100000 AND 200000</when>
+                            <when test="priceRange == '200000-'">AND p.price >= 200000</when>
+                        </choose>
+                    </if>
+                    
+                    <if test="status != null and status != ''">
+                        <choose>
+                            <when test="status == 'AVAILABLE'">AND 1=1</when>
+                            <when test="status == 'SOLD'">AND 1=1</when>
+                        </choose>
+                    </if>
+                </where>
+                GROUP BY p.prod_no, p.price, p.stock
+                <if test="status != null and status != ''">
+                    <choose>
+                        <when test="status == 'AVAILABLE'">HAVING MAX(od.order_detail_id) IS NULL</when>
+                        <when test="status == 'SOLD'">HAVING MAX(od.order_detail_id) IS NOT NULL</when>
+                    </choose>
+                </if>
+            ) filtered_products
+        ) final
+        JOIN new_product p ON p.prod_no = final.prod_no
+        LEFT JOIN new_categories c ON p.category_id = c.category_id
+        LEFT JOIN product_files f ON p.prod_no = f.prod_no
+        WHERE final.rn BETWEEN #{startRowNum} AND #{endRowNum}
+        ORDER BY final.rn, f.file_id ASC
+    </select>
+
+    <!-- ========================================
+         SELECT COUNT: ì „ì²´ ìƒí’ˆ ìˆ˜ (ê¸°ë³¸)
+         ======================================== -->
+    <select id="getTotalCount" parameterType="search" resultType="int">
+        SELECT COUNT(*)
+        FROM new_product
+        <where>
+            <if test="searchCondition != null and searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchCondition == 0">AND CAST(prod_no AS VARCHAR2(20)) LIKE '%'||#{searchKeyword}||'%'</when>
+                    <when test="searchCondition == 1">AND UPPER(prod_name) LIKE UPPER('%'||#{searchKeyword}||'%')</when>
+                    <when test="searchCondition == 2">AND CAST(price AS VARCHAR2(20)) LIKE '%'||#{searchKeyword}||'%'</when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!-- ========================================
+         SELECT COUNT: í•„í„°ë§ëœ ìƒí’ˆ ìˆ˜ (íŒë§¤ ìƒíƒœ í¬í•¨)
+         ======================================== -->
+    <select id="getFilteredTotalCount" parameterType="search" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+            SELECT p.prod_no
+            FROM new_product p
+            LEFT JOIN new_order_details od ON p.prod_no = od.prod_no
+            <where>
+                <if test="searchCondition != null and searchKeyword != null and searchKeyword != ''">
+                    <choose>
+                        <when test="searchCondition == '0'">AND CAST(p.prod_no AS VARCHAR2(20)) LIKE '%'||#{searchKeyword}||'%'</when>
+                        <when test="searchCondition == '1'">AND UPPER(p.prod_name) LIKE UPPER('%'||#{searchKeyword}||'%')</when>
+                        <when test="searchCondition == '2'">AND CAST(p.price AS VARCHAR2(20)) LIKE '%'||#{searchKeyword}||'%'</when>
+                    </choose>
+                </if>
+                
+                <if test="priceRange != null and priceRange != ''">
+                    <choose>
+                        <when test="priceRange == '0-50000'">AND p.price &lt;= 50000</when>
+                        <when test="priceRange == '50000-100000'">AND p.price BETWEEN 50000 AND 100000</when>
+                        <when test="priceRange == '100000-200000'">AND p.price BETWEEN 100000 AND 200000</when>
+                        <when test="priceRange == '200000-'">AND p.price >= 200000</when>
+                    </choose>
+                </if>
+            </where>
+            GROUP BY p.prod_no
+            <if test="status != null and status != ''">
+                <choose>
+                    <when test="status == 'AVAILABLE'">
+                        HAVING MAX(od.order_detail_id) IS NULL
+                    </when>
+                    <when test="status == 'SOLD'">
+                        HAVING MAX(od.order_detail_id) IS NOT NULL
+                    </when>
+                </choose>
+            </if>
+        ) filtered
+    </select>
+
+    <!-- ========================================
+         SELECT LIST: ìƒí’ˆ íŒŒì¼ ëª©ë¡ ì¡°íšŒ
+         ======================================== -->
+    <select id="getProductFiles" parameterType="int" resultMap="productFileMap">
+        SELECT 
+            file_id, 
+            prod_no, 
+            original_name, 
+            saved_name, 
+            file_size, 
+            file_type, 
+            upload_date
+        FROM product_files
+        WHERE prod_no = #{value}
+        ORDER BY file_id ASC
+    </select>
+    
+    <!-- ========================================
+         UPDATE: ìž¬ê³  ì—…ë°ì´íŠ¸
+         ======================================== -->
+    <update id="updateStock" parameterType="map">
+        UPDATE new_product
+        SET stock = #{stock}
+        WHERE prod_no = #{prodNo}
+    </update>
+    
+    <!-- ========================================
+         DELETE: ìƒí’ˆ íŒŒì¼ ì‚­ì œ
+         ======================================== -->
+    <delete id="deleteProductFile" parameterType="int">
+        DELETE FROM product_files
+        WHERE file_id = #{value}
+    </delete>
+    
+    <!-- ========================================
+         DELETE: ìƒí’ˆ ì‚­ì œ
+         ======================================== -->
+    <delete id="deleteProduct" parameterType="int">
+        DELETE FROM new_product
+        WHERE prod_no = #{value}
+    </delete>
+
+</mapper>

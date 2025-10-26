@@ -1,0 +1,431 @@
+/**
+ * login.css
+ * loginView.jsp 페이지 전용 스타일
+ */
+
+/* ========================================
+   로그인 컨테이너
+   ======================================== */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 24px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* ========================================
+   로그인 박스
+   ======================================== */
+.login-box {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   로그인 왼쪽 (Welcome 영역)
+   ======================================== */
+.login-left {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 40px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-left h1 {
+    font-size: 36px;
+    font-weight: 300;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.login-left p {
+    font-size: 16px;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+/* ========================================
+   로그인 오른쪽 (폼 영역)
+   ======================================== */
+.login-right {
+    flex: 1;
+    padding: 60px 40px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* ========================================
+   폼 요소
+   ======================================== */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input::placeholder {
+    color: #adb5bd;
+}
+
+/* ========================================
+   버튼
+   ======================================== */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.btn-register {
+    width: 100%;
+    padding: 14px;
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-register:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ========================================
+   구분선
+   ======================================== */
+.divider {
+    text-align: center;
+    margin: 30px 0;
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e9ecef;
+}
+
+.divider span {
+    background: white;
+    padding: 0 16px;
+    position: relative;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* ========================================
+   푸터 링크
+   ======================================== */
+.login-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.login-footer a {
+    color: #667eea;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.login-footer a:hover {
+    color: #5568d1;
+    text-decoration: underline;
+}
+
+/* ========================================
+   반응형 디자인
+   ======================================== */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 80px 16px 16px;
+    }
+
+    .login-box {
+        flex-direction: column;
+    }
+
+    .login-left {
+        padding: 40px 30px;
+    }
+
+    .login-left h1 {
+        font-size: 28px;
+    }
+
+    .login-left p {
+        font-size: 14px;
+    }
+
+    .login-right {
+        padding: 40px 30px;
+    }
+
+    .login-header h2 {
+        font-size: 24px;
+    }
+}
+
+/* ========================================
+   로딩 상태
+   ======================================== */
+.btn-login:disabled,
+.btn-register:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ========================================
+   에러 메시지
+   ======================================== */
+.error-message {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+
+.form-group.error .form-input {
+    border-color: #dc3545;
+}
+
+.form-group.error .error-message {
+    display: block;
+}
+
+/* ========================================
+   성공 메시지
+   ======================================== */
+.success-message {
+    color: #28a745;
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+
+.form-group.success .success-message {
+    display: block;
+}
+
+/* ========================================
+   소셜 로그인 버튼 스타일
+   ======================================== */
+
+.social-login-section {
+    margin-top: 24px;
+}
+
+.divider-social {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.divider-social::before,
+.divider-social::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 42%;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.divider-social::before {
+    left: 0;
+}
+
+.divider-social::after {
+    right: 0;
+}
+
+.divider-social span {
+    background: white;
+    padding: 0 12px;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* 소셜 로그인 버튼 공통 스타일 */
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 12px;
+    border: 2px solid;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-social:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.social-icon {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 카카오 버튼 (노란색) */
+.btn-kakao {
+    background: #FEE500;
+    color: #000000;
+    border-color: #FEE500;
+}
+
+.btn-kakao:hover {
+    background: #FDD835;
+    border-color: #FDD835;
+}
+
+/* 네이버 버튼 (초록색) */
+.btn-naver {
+    background: #03C75A;
+    color: #FFFFFF;
+    border-color: #03C75A;
+}
+
+.btn-naver:hover {
+    background: #02B350;
+    border-color: #02B350;
+}
+
+.btn-naver .social-icon {
+    background: #FFFFFF;
+    color: #03C75A;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* 구글 버튼 (흰색) */
+.btn-google {
+    background: #FFFFFF;
+    color: #333333;
+    border-color: #DADCE0;
+}
+
+.btn-google:hover {
+    background: #F8F9FA;
+    border-color: #BDBDBD;
+}
+
+.btn-google .social-icon {
+    background: linear-gradient(45deg, #4285F4, #EA4335, #FBBC05, #34A853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .btn-social {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .social-icon {
+        font-size: 18px;
+    }
+}

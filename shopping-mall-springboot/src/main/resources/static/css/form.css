@@ -1,0 +1,509 @@
+/**
+ * form.css
+ * 상품 등록/수정, 구매 등록/수정 폼에서 공통으로 사용하는 스타일
+ * loginView.jsp, index.jsp와 일관된 디자인 적용
+ */
+
+/* ========================================
+   페이지 컨테이너
+   ======================================== */
+.form-page {
+    min-height: 100vh;
+    padding-top: 90px;
+    padding-bottom: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================
+   폼 컨테이너
+   ======================================== */
+.form-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 48px;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   폼 헤더
+   ======================================== */
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.form-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* ========================================
+   폼 그룹
+   ======================================== */
+.form-group {
+    margin-bottom: 28px;
+}
+
+.form-group.required .form-label::after {
+    content: ' *';
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    outline: none;
+    background-color: white;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #adb5bd;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23495057' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+/* 읽기 전용 필드 */
+.form-input:read-only,
+.form-textarea:read-only {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   유효성 검사 메시지
+   ======================================== */
+.validation-msg {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.validation-msg.success {
+    color: #28a745;
+}
+
+.validation-msg.error {
+    color: #dc3545;
+}
+
+.form-input.valid,
+.form-textarea.valid,
+.form-select.valid {
+    border-color: #28a745;
+}
+
+.form-input.invalid,
+.form-textarea.invalid,
+.form-select.invalid {
+    border-color: #dc3545;
+}
+
+/* ========================================
+   파일 업로드 영역
+   ======================================== */
+.file-upload-area {
+    margin-bottom: 28px;
+}
+
+.file-upload-box {
+    border: 2px dashed #e9ecef;
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.file-upload-box:hover {
+    border-color: #667eea;
+    background-color: #f0f4ff;
+}
+
+.file-upload-box.dragging {
+    border-color: #667eea;
+    background-color: #e8eeff;
+    transform: scale(1.02);
+}
+
+.file-upload-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+.file-upload-text {
+    color: #495057;
+    font-size: 15px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.file-upload-hint {
+    color: #6c757d;
+    font-size: 13px;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+/* 파일 미리보기 영역 */
+.file-preview-area {
+    margin-top: 20px;
+}
+
+.file-preview-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 12px;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.file-item:hover {
+    background: #e9ecef;
+}
+
+.file-icon {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 2px;
+}
+
+.file-size {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.file-delete {
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px 8px;
+    transition: transform 0.2s ease;
+}
+
+.file-delete:hover {
+    transform: scale(1.2);
+}
+
+/* 기존 파일 목록 (수정 페이지용) */
+.existing-files {
+    margin-bottom: 28px;
+}
+
+.existing-files-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.existing-files-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.toggle-all-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.toggle-all-checkbox input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.existing-file-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.existing-file-checkbox {
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+/* ========================================
+   헬프 텍스트
+   ======================================== */
+.form-help {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.form-help-icon {
+    margin-right: 4px;
+}
+
+/* ========================================
+   인풋 그룹 (접두사/접미사 있는 경우)
+   ======================================== */
+.input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.input-prefix,
+.input-suffix {
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    white-space: nowrap;
+}
+
+.input-group .form-input {
+    flex: 1;
+}
+
+/* ========================================
+   버튼 그룹
+   ======================================== */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 2px solid #f8f9fa;
+}
+
+.btn-submit,
+.btn-cancel {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    background: white;
+    color: #495057;
+    border: 2px solid #dee2e6;
+}
+
+.btn-cancel:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+/* 로딩 상태 */
+.btn-submit.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn-submit.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid white;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   정보 박스
+   ======================================== */
+.info-box {
+    background: #e8eeff;
+    border-left: 4px solid #667eea;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+}
+
+.info-box-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.info-box-content {
+    font-size: 13px;
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+/* ========================================
+   반응형
+   ======================================== */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 32px 24px;
+        margin: 20px;
+        border-radius: 16px;
+    }
+
+    .form-header h1 {
+        font-size: 24px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        width: 100%;
+    }
+
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-prefix,
+    .input-suffix {
+        text-align: left;
+    }
+}
+
+/* ========================================
+   다크모드 지원 (선택사항)
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+    /* 필요시 다크모드 스타일 추가 */
+}

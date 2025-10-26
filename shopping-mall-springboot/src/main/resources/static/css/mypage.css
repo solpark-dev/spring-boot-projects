@@ -1,0 +1,839 @@
+/**
+ * mypage.css
+ * 마이페이지 전용 스타일
+ */
+
+/* ========================================
+   마이페이지 전체 레이아웃
+   ======================================== */
+.mypage-container {
+    display: flex;
+    gap: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 24px 40px;
+    min-height: 100vh;
+}
+
+/* ========================================
+   사이드바
+   ======================================== */
+.mypage-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.profile-summary {
+    background: white;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
+}
+
+.profile-summary h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.user-email {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.user-role {
+    font-size: 12px;
+    color: #667eea;
+    font-weight: 500;
+}
+
+.mypage-nav {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tab-btn {
+    width: 100%;
+    padding: 14px 16px;
+    background: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.tab-btn:last-child {
+    margin-bottom: 0;
+}
+
+.tab-btn:hover {
+    background: #f8f9fa;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.tab-btn i {
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-footer {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   메인 콘텐츠
+   ======================================== */
+.mypage-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.content-header {
+    margin-bottom: 32px;
+}
+
+.content-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   프로필 섹션
+   ======================================== */
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.profile-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.info-group p {
+    font-size: 15px;
+    color: #212529;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-group input {
+    font-size: 15px;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.info-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-admin {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-user {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* ========================================
+   소셜 계정 섹션
+   ======================================== */
+.social-info-box {
+    background: #e8eeff;
+    border-left: 4px solid #667eea;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+    display: flex;
+    gap: 16px;
+}
+
+.social-info-box i {
+    font-size: 24px;
+    color: #667eea;
+}
+
+.social-info-box h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.social-info-box p {
+    font-size: 13px;
+    color: #495057;
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.social-accounts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.social-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.social-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.social-card.connected {
+    background: #f0f4ff;
+    border: 2px solid #667eea;
+}
+
+.social-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.social-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.social-icon.kakao {
+    background: #FEE500;
+    color: #000000;
+}
+
+.social-icon.naver {
+    background: #03C75A;
+    color: #FFFFFF;
+}
+
+.social-icon.google {
+    background: #FFFFFF;
+    border: 1px solid #DADCE0;
+}
+
+.social-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 4px;
+}
+
+.social-status {
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.social-card.connected .social-status {
+    color: #667eea;
+    font-weight: 500;
+}
+
+/* ========================================
+   장바구니 섹션
+   ======================================== */
+.cart-container {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cart-items {
+    margin-bottom: 32px;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 40px 100px 1fr 120px 100px 60px;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+}
+
+.cart-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.cart-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* ✅ 기본 이미지 placeholder 추가 */
+.cart-item-image-placeholder {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 36px;
+    border: 2px dashed #dee2e6;
+}
+
+.cart-item-image-placeholder i {
+    opacity: 0.6;
+}
+
+/* 이미지 로딩 실패 시 스타일 */
+.cart-item-image.error {
+    display: none;
+}
+
+.cart-item-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.cart-item-info p {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.sold-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #ffebee;
+    color: #c62828;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e9ecef;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 16px;
+}
+
+.qty-btn:hover:not(:disabled) {
+    background: #f8f9fa;
+    border-color: #667eea;
+}
+
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.qty-input {
+    width: 60px;
+    height: 32px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.cart-item-price .price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f8f9fa;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.btn-icon:hover {
+    background: #ffebee;
+    color: #dc3545;
+    transform: scale(1.1);
+}
+
+.cart-summary {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row.total {
+    padding-top: 16px;
+    margin-top: 8px;
+    border-top: 2px solid #212529;
+}
+
+.summary-value {
+    font-weight: 600;
+}
+
+.total-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+/* ========================================
+   주문 내역 섹션
+   ======================================== */
+.orders-filter {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    border: 2px solid #e9ecef;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    border-color: #667eea;
+    background: #f8f9fa;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+}
+
+.orders-container {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.order-item {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.order-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.order-number {
+    font-weight: 600;
+    color: #212529;
+}
+
+.order-date {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.order-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-product h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.order-product p {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.order-status {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-PAYMENT_COMPLETE {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-PREPARING_SHIPMENT {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-SHIPPED {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.status-DELIVERED {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-CANCELLED {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* ========================================
+   버튼 스타일
+   ======================================== */
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: white;
+    color: #495057;
+    border: 2px solid #e9ecef;
+}
+
+.btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-large {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+}
+
+.btn-connect {
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* ========================================
+   로딩 & 빈 상태
+   ======================================== */
+.loading-spinner {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+    color: #6c757d;
+    margin: 0;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-message i {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+}
+
+.empty-message p {
+    font-size: 18px;
+    color: #6c757d;
+    margin: 0 0 20px 0;
+}
+
+/* ========================================
+   반응형 디자인
+   ======================================== */
+@media (max-width: 1024px) {
+    .mypage-container {
+        flex-direction: column;
+        padding-top: 90px;
+    }
+    
+    .mypage-sidebar {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .mypage-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .tab-btn {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .mypage-container {
+        padding: 80px 16px 40px;
+    }
+    
+    .profile-card,
+    .cart-container,
+    .orders-container {
+        padding: 24px;
+    }
+    
+    .cart-item {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .cart-item-image {
+        width: 100%;
+        height: auto;
+    }
+    
+    .profile-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .social-accounts {
+        grid-template-columns: 1fr;
+    }
+    
+    .mypage-nav {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
