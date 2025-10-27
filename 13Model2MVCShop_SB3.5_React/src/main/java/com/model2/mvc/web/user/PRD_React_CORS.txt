@@ -1,0 +1,76 @@
+=================================================
+PRD : Product Requirement Document : 제품요구서 작성 : ???
+--------------------------------------------------
+-- 용어에 익숙해지자 
+: 구현요구사항을 AI 에 전달 하는 skill 을 익힘.
+: 요구사항을 정확히 지시 : Prompt Detail
+: 직접 지시가 아니라 AI 와 협업 
+   예> 이렇게 하려면 어떻게 해야해 ? 
+         : 난 알고 있지만. AI 가 생각하고 해결 할 수 있도록
+
+: Low-code / Prompt Engineering / Ai-assisted coding
+=================================================
+
+
+#####  Prompt >
+UserRestController.java 
+
+: Postman 으로 테스트 하려 합니다.
+: 테스트 할 수 있도록 텍스트 화일로 정리 해 주세요.
+##### 답변 > Gimini
+UserRestController_Postman_test.txt
+#####
+
+
+#####  Prompt > SpringBoot 3.5.5 적용.
+CrossOriginResourceSharing.java
+web.xml
+
+: SpringBoot 3.5.5 에는 어떻게 설정하나요
+##### 답변 > Gimini
+package com.example.yourproject.config; // 본인 프로젝트에 맞는 패키지 경로로 수정
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**") 				// "/**"는 모든 경로를 의미, web.xml의 <url-pattern>/*</url-pattern>과 동일
+                .allowedOriginPatterns("*") 		// 요청을 보내는 출처(Origin)를 모두 허용
+                .allowedMethods("GET", "POST", "PUT", "DELETE") 			// 허용할 HTTP 메서드
+                .allowedHeaders("*") 															// 허용할 HTTP 헤더
+                .allowCredentials(true) 															// 쿠키/인증 정보 포함 요청 허용
+                .maxAge(3600); 																		// Pre-flight 요청의 캐시 시간(초)
+    }
+}
+#####
+
+
+
+==> 아래의 조건도 만족한다 함.
+//=============================================================//
+//==> HttpSession(내부적으로 cookie 사용) 기반 상태유지 위해 아래 와 같이 변경		
+//=============================================================//
+//		HttpServletResponse res = (HttpServletResponse) response; 
+//		res.setHeader("Access-Control-Allow-Origin", "*"); //허용대상 도메인
+//=============================================================//		
+	
+		//==> 변경된 부위
+		HttpServletRequest req = (HttpServletRequest) request;
+	    HttpServletResponse res = (HttpServletResponse) response;
+		
+		String origin = req.getHeader("Origin");  //==> 요청이 어디서 오는지 확인.
+		System.out.println(origin);   //==> 같은 도메인은 null 아니면 / 다른 ip:port 나옴. 
+		
+		if (origin != null) {
+		    res.setHeader("Access-Control-Allow-Origin", origin);           // 요청 origin 허용대상 도메인 설정
+		    res.setHeader("Access-Control-Allow-Credentials", "true"); // 쿠키를 내려보내는 것 허용
+		}
+//=============================================================//		
+
+
+

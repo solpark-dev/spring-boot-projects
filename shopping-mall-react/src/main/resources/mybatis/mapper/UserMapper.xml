@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserMapper">
+ 	
+	<resultMap id="userSelectMap" type="user">
+		<result property="userNo" 		column="user_no" 		jdbcType="INTEGER"/>
+		<result property="userId" 		column="user_id" 		jdbcType="VARCHAR"/>
+		<result property="userName" 	column="user_name" 		jdbcType="VARCHAR"/>
+		<result property="password" 	column="password" 		jdbcType="VARCHAR"/>
+		<result property="role" 		column="role" 			jdbcType="VARCHAR"/>
+		<result property="status"       column="status"         jdbcType="VARCHAR"/>
+		<result property="email" 		column="email" 			jdbcType="VARCHAR"/>
+		<result property="regDate" 		column="reg_date" 		jdbcType="DATE"/>
+	</resultMap>
+	
+	<!-- SQL : INSERT -->
+	<insert id="addUser" parameterType="user">
+	    <selectKey keyProperty="userNo" resultType="int" order="BEFORE">
+	        SELECT seq_user_no.nextval FROM dual
+	    </selectKey>
+	    INSERT
+	    INTO new_users( user_no, user_id, user_name, password, role, status, email, reg_date )
+	    VALUES ( #{userNo}, #{userId}, #{userName}, #{password}, #{role:VARCHAR}, 'ACTIVE', #{email:VARCHAR}, SYSDATE )
+	</insert>
+	
+	<!-- SQL : INSERT (ì†Œì…œ ë¡œê·¸ì¸ìš©) -->
+	<insert id="addSocialUser" parameterType="user">
+	    <selectKey keyProperty="userNo" resultType="int" order="BEFORE">
+	        SELECT seq_user_no.nextval FROM dual
+	    </selectKey>
+	    INSERT
+	    INTO new_users(
+	        user_no, user_id, user_name, password, role, status, email, reg_date
+	    )
+	    VALUES (
+	        #{userNo},
+	        #{userId:VARCHAR},
+	        #{userName},
+	        #{password:VARCHAR},
+	        #{role:VARCHAR},
+	        'ACTIVE',
+	        #{email:VARCHAR},
+	        SYSDATE
+	    )
+	</insert>
+	 
+	<!-- SQL : SELECT ONE -->
+	<select id="getUser" parameterType="string" resultMap="userSelectMap">
+		SELECT
+		user_no, user_id, user_name, password, role, status, email, reg_date		
+		FROM new_users
+		WHERE user_id = #{value}
+	</select>
+	
+	<!-- SQL : SELECT ONE BY USER_NO -->
+	<select id="getUserByUserNo" parameterType="int" resultMap="userSelectMap">
+	    SELECT
+	    user_no, user_id, user_name, password, role, status, email, reg_date
+	    FROM new_users
+	    WHERE user_no = #{value}
+	</select>
+	 
+	<!-- SQL : UPDATE -->
+	<!-- SQL : UPDATE - ë™ì  SQLë¡œ ìˆ˜ì • -->
+<update id="updateUser" parameterType="user">
+   	UPDATE new_users
+	<set>
+		<!-- ì´ë¦„ì´ nullì´ ì•„ë‹ ë•Œë§Œ ì—…ë°ì´íŠ¸ -->
+		<if test="userName != null and userName != ''">
+		    user_name = #{userName},
+		</if>
+		
+		<!-- ë¹„ë°€ë²ˆí˜¸ê°€ nullì´ ì•„ë‹ ë•Œë§Œ ì—…ë°ì´íŠ¸ -->
+		<if test="password != null and password != ''">
+		    password = #{password},
+		</if>
+		
+		<!-- ì´ë©”ì¼ì´ nullì´ ì•„ë‹ ë•Œë§Œ ì—…ë°ì´íŠ¸ -->
+		<if test="email != null and email != ''">
+		    email = #{email},
+		</if>
+		
+		<!-- ìƒíƒœê°€ nullì´ ì•„ë‹ ë•Œë§Œ ì—…ë°ì´íŠ¸ -->
+		<if test="status != null and status != ''">
+		    status = #{status}
+		</if>
+	</set>
+	WHERE user_no = #{userNo}
+</update>
+		 
+	<!-- SQL : SELECT LIST -->
+	<select id="getUserList" parameterType="search" resultMap="userSelectMap">
+    SELECT outer_table.*
+    FROM (
+        SELECT inner_table.*, ROWNUM AS row_seq
+        FROM (
+            SELECT user_no, user_id, user_name, email, status, reg_date
+            FROM new_users
+            <where>
+                <if test="searchCondition != null and searchKeyword != null and searchKeyword != ''">
+                    <choose>
+                        <when test="searchCondition == 0">
+                            AND user_id LIKE '%'||#{searchKeyword}||'%'
+                        </when>
+                        <when test="searchCondition == 1">
+                            AND user_name LIKE '%'||#{searchKeyword}||'%'
+                        </when>
+                        <!-- âœ… ì¶”ê°€: ì´ë©”ì¼ ê²€ìƒ‰ ì¼€ì´ìŠ¤ -->
+                        <when test="searchCondition == 2">
+                            AND email LIKE '%'||#{searchKeyword}||'%'
+                        </when>
+                    </choose>
+                </if>
+            </where>
+            ORDER BY user_no DESC
+        ) inner_table
+        WHERE ROWNUM &lt;= #{endRowNum}
+    ) outer_table
+    WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+</select>
+	
+	<!-- SQL : SELECT ROW Count -->	 
+	<select id="getTotalCount" parameterType="search" resultType="int">
+    SELECT COUNT(*)
+    FROM (
+        SELECT user_id, user_name, email
+        FROM new_users
+        <where>
+            <if test="searchCondition != null and searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchCondition == 0">
+                        AND user_id LIKE '%'||#{searchKeyword}||'%'
+                    </when>
+                    <when test="searchCondition == 1">
+                        AND user_name LIKE '%'||#{searchKeyword}||'%'
+                    </when>
+                    <!-- âœ… ì¶”ê°€: ì´ë©”ì¼ ê²€ìƒ‰ ì¼€ì´ìŠ¤ -->
+                    <when test="searchCondition == 2">
+                        AND email LIKE '%'||#{searchKeyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    ) countTable
+</select>
+	
+	<!-- SQL : ID ì¤‘ë³µ ì²´í¬ -->
+	<select id="checkDuplication" parameterType="string" resultType="boolean">
+		SELECT 
+		    CASE 
+		        WHEN COUNT(*) > 0 THEN 1 
+		        ELSE 0 
+		    END AS result
+		FROM new_users
+		WHERE user_id = #{value}
+	</select>
+	 
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserAddressMapper">
+    
+    <!-- ========================================
+         ResultMap: UserAddress ê°ì²´ ë§¤í•‘
+         ======================================== -->
+    <resultMap id="userAddressSelectMap" type="userAddress">
+        <result property="addressId"    column="address_id"    jdbcType="INTEGER"/>
+        <result property="userNo"       column="user_no"       jdbcType="INTEGER"/>
+        <result property="addressAlias" column="address_alias" jdbcType="VARCHAR"/>
+        <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
+        <result property="address"      column="address"       jdbcType="VARCHAR"/>
+        <result property="phoneNumber"  column="phone_number"  jdbcType="VARCHAR"/>
+        <result property="isDefault"    column="is_default"    jdbcType="CHAR"/>
+        <result property="regDate"      column="reg_date"      jdbcType="DATE"/>
+    </resultMap>
+    
+    <!-- ========================================
+         INSERT: ë°°ì†¡ì§€ ì¶”ê°€
+         ======================================== -->
+    <insert id="addAddress" parameterType="userAddress">
+        <selectKey keyProperty="addressId" resultType="int" order="BEFORE">
+            SELECT seq_addresses_id.nextval FROM dual
+        </selectKey>
+        
+        INSERT INTO user_addresses (
+            address_id,
+            user_no,
+            address_alias,
+            receiver_name,
+            address,
+            phone_number,
+            is_default
+        ) VALUES (
+            #{addressId},
+            #{userNo},
+            #{addressAlias},
+            #{receiverName},
+            #{address},
+            #{phoneNumber},
+            #{isDefault, jdbcType=CHAR}
+        )
+    </insert>
+    
+    <!-- ========================================
+         SELECT ONE: ë°°ì†¡ì§€ ì¡°íšŒ
+         ======================================== -->
+    <select id="getAddress" parameterType="int" resultMap="userAddressSelectMap">
+        SELECT 
+            address_id,
+            user_no,
+            address_alias,
+            receiver_name,
+            address,
+            phone_number,
+            is_default,
+            reg_date
+        FROM user_addresses
+        WHERE address_id = #{value}
+    </select>
+    
+    <!-- ========================================
+         SELECT LIST: ì‚¬ìš©ìžë³„ ë°°ì†¡ì§€ ëª©ë¡ ì¡°íšŒ
+         ======================================== -->
+    <select id="getAddressListByUserNo" parameterType="int" resultMap="userAddressSelectMap">
+        SELECT 
+            address_id,
+            user_no,
+            address_alias,
+            receiver_name,
+            address,
+            phone_number,
+            is_default,
+            reg_date
+        FROM user_addresses
+        WHERE user_no = #{value}
+        ORDER BY 
+            CASE WHEN is_default = 'Y' THEN 0 ELSE 1 END,
+            address_id DESC
+    </select>
+    
+    <!-- ========================================
+         SELECT ONE: ê¸°ë³¸ ë°°ì†¡ì§€ ì¡°íšŒ
+         ======================================== -->
+    <select id="getDefaultAddress" parameterType="int" resultMap="userAddressSelectMap">
+        SELECT 
+            address_id,
+            user_no,
+            address_alias,
+            receiver_name,
+            address,
+            phone_number,
+            is_default,
+            reg_date
+        FROM user_addresses
+        WHERE user_no = #{value}
+          AND is_default = 'Y'
+    </select>
+    
+    <!-- ========================================
+         UPDATE: ë°°ì†¡ì§€ ìˆ˜ì •
+         ======================================== -->
+    <update id="updateAddress" parameterType="userAddress">
+        UPDATE user_addresses
+        <set>
+            <if test="addressAlias != null and addressAlias != ''">
+                address_alias = #{addressAlias},
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                receiver_name = #{receiverName},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                phone_number = #{phoneNumber},
+            </if>
+            <if test="isDefault != null">
+                is_default = #{isDefault, jdbcType=CHAR}
+            </if>
+        </set>
+        WHERE address_id = #{addressId}
+    </update>
+    
+    <!-- ========================================
+         DELETE: ë°°ì†¡ì§€ ì‚­ì œ
+         ======================================== -->
+    <delete id="deleteAddress" parameterType="int">
+        DELETE FROM user_addresses
+        WHERE address_id = #{value}
+    </delete>
+    
+    <!-- ========================================
+         UPDATE: ì‚¬ìš©ìžì˜ ëª¨ë“  ë°°ì†¡ì§€ ê¸°ë³¸ ì„¤ì • í•´ì œ
+         ======================================== -->
+    <update id="clearDefaultAddress" parameterType="int">
+        UPDATE user_addresses
+        SET is_default = 'N'
+        WHERE user_no = #{value}
+    </update>
+    
+    <!-- ========================================
+         UPDATE: ê¸°ë³¸ ë°°ì†¡ì§€ ì„¤ì •
+         ======================================== -->
+    <update id="setDefaultAddress" parameterType="map">
+        UPDATE user_addresses
+        SET is_default = 'Y'
+        WHERE user_no = #{userNo}
+          AND address_id = #{addressId}
+    </update>
+
+</mapper>

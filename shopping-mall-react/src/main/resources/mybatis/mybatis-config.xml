@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+ 		 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ 		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+  						
+<!--	mybatis-config.xml :: MyBatis Framework  MetaData -->
+<configuration>
+
+	<!-- 기타 설정정보 :: [MyBatis_Home]/mybatis-3.2.1.pdf 참조 -->
+	<settings>
+		<setting name="callSettersOnNulls" value="false"/>
+	</settings>	
+	
+	<!-- FQCN(Full Qualified Class Name) Alias(별칭관리) -->
+	<typeAliases>
+		<typeAlias alias="user" type="com.model2.mvc.service.domain.User" />
+		<typeAlias alias="product" type="com.model2.mvc.service.domain.Product" />
+		<typeAlias alias="purchase" type="com.model2.mvc.service.domain.Purchase" />
+		<typeAlias alias="productFile" type="com.model2.mvc.service.domain.ProductFile" />
+		
+		<!-- 소셜 로그인 관련 -->
+		<typeAlias alias="socialAccount" type="com.model2.mvc.service.domain.SocialAccount" />
+		<typeAlias alias="kakaoUserInfo" type="com.model2.mvc.service.domain.KakaoUserInfo" />
+		
+		<!-- 장바구니 -->
+		<typeAlias alias="cart" type="com.model2.mvc.service.domain.Cart" />
+		
+		<!-- 카테고리 -->
+		<typeAlias alias="category" type="com.model2.mvc.service.domain.Category" />
+		
+		<!-- 배송지 -->
+		<typeAlias alias="userAddress" type="com.model2.mvc.service.domain.UserAddress" />
+		
+		<typeAlias alias="search" type="com.model2.mvc.common.Search" />
+	</typeAliases>
+	
+	 <!-- SQL Definition :: file include -->
+	<!-- 
+		참고: application.properties의 mybatis.mapper-locations 설정으로 
+		자동으로 mapper 파일들을 스캔하므로 이 섹션은 생략 가능합니다.
+		명시적으로 관리하고 싶다면 아래 주석을 해제하세요.
+	-->
+	<!--
+	<mappers>
+		<mapper resource="mybatis/mapper/UserMapper.xml"/>
+		<mapper resource="mybatis/mapper/ProductMapper.xml"/>
+		<mapper resource="mybatis/mapper/PurchaseMapper.xml"/>
+		<mapper resource="mybatis/mapper/SocialAccountMapper.xml"/>
+		<mapper resource="mybatis/mapper/CartMapper.xml"/>
+		<mapper resource="mybatis/mapper/CategoryMapper.xml"/>
+		<mapper resource="mybatis/mapper/UserAddressMapper.xml"/>
+	</mappers>
+	-->
+
+</configuration>

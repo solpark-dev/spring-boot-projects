@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CategoryMapper">
+    
+    <!-- ========================================
+         ResultMap: Category ê°ì²´ ë§¤í•‘
+         ======================================== -->
+    <resultMap id="categorySelectMap" type="category">
+        <result property="categoryId"   column="category_id"   jdbcType="INTEGER"/>
+        <result property="categoryName" column="category_name" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <!-- ========================================
+         INSERT: ì¹´í…Œê³ ë¦¬ ì¶”ê°€
+         ======================================== -->
+    <insert id="addCategory" parameterType="category">
+        <selectKey keyProperty="categoryId" resultType="int" order="BEFORE">
+            SELECT seq_categories_id.nextval FROM dual
+        </selectKey>
+        
+        INSERT INTO new_categories (
+            category_id,
+            category_name
+        ) VALUES (
+            #{categoryId},
+            #{categoryName}
+        )
+    </insert>
+    
+    <!-- ========================================
+         SELECT ONE: ì¹´í…Œê³ ë¦¬ ì¡°íšŒ
+         ======================================== -->
+    <select id="getCategory" parameterType="int" resultMap="categorySelectMap">
+        SELECT 
+            category_id,
+            category_name
+        FROM new_categories
+        WHERE category_id = #{value}
+    </select>
+    
+    <!-- ========================================
+         SELECT LIST: ì¹´í…Œê³ ë¦¬ ì „ì²´ ëª©ë¡ ì¡°íšŒ
+         ======================================== -->
+    <select id="getCategoryList" resultMap="categorySelectMap">
+        SELECT 
+            category_id,
+            category_name
+        FROM new_categories
+        ORDER BY category_id ASC
+    </select>
+    
+    <!-- ========================================
+         UPDATE: ì¹´í…Œê³ ë¦¬ ìˆ˜ì •
+         ======================================== -->
+    <update id="updateCategory" parameterType="category">
+        UPDATE new_categories
+        SET category_name = #{categoryName}
+        WHERE category_id = #{categoryId}
+    </update>
+    
+    <!-- ========================================
+         DELETE: ì¹´í…Œê³ ë¦¬ ì‚­ì œ
+         ======================================== -->
+    <delete id="deleteCategory" parameterType="int">
+        DELETE FROM new_categories
+        WHERE category_id = #{value}
+    </delete>
+    
+    <!-- ========================================
+         SELECT ONE: ì¹´í…Œê³ ë¦¬ëª…ìœ¼ë¡œ ì¡°íšŒ (ì¤‘ë³µ ì²´í¬ìš©)
+         ======================================== -->
+    <select id="getCategoryByName" parameterType="string" resultMap="categorySelectMap">
+        SELECT 
+            category_id,
+            category_name
+        FROM new_categories
+        WHERE category_name = #{value}
+    </select>
+
+</mapper>
