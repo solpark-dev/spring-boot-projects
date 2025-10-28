@@ -17,7 +17,10 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * @PropertySource: Properties 파일 위치 지정
  */
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource({
+    "classpath:application.properties",
+    "classpath:application-secret.properties"
+})
 public class AppConfig {
 
     /**
