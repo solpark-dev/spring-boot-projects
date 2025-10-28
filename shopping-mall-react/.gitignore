@@ -54,3 +54,16 @@ Thumbs.db
 # Application specific
 /uploads/
 /images/
+
+### API Keys and Secrets ###
+# API 키가 포함된 설정 파일들
+application-secret.properties
+*-secret.properties
+
+# 환경변수 파일
+.env
+.env.local
+
+# IDE 관련 민감 정보
+.idea/**/workspace.xml
+.idea/**/tasks.xml
